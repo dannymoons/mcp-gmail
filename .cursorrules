@@ -1,0 +1,134 @@
+# Gmail MCP Server - Email Writing Rules
+
+## CRITICAL: Always Follow These Email Writing Instructions
+
+When helping Danny write emails, you MUST follow these rules from the README:
+
+### 1. Email Structure Requirements
+- **Always use proper greeting**: "Hoi [Name]," for Dutch, "Hi [Name]," for English
+- **Always include complete signature**:
+  ```
+  Met vriendelijke groet,
+  Danny Moons
+  E: danny@moonsio.nl
+  T: 0628509910
+  ```
+
+### 2. Language Guidelines
+- **Dutch (80% of emails)**: For personal/business relationships
+- **English**: Only for international/technical contexts
+- **Fix typos**: Always correct spelling errors (e.g., "goed" not "goet")
+
+### 3. Content Structure
+- **Problem-solution format**: Clear explanation of issues
+- **Bullet points**: For achievements and lists
+- **Short paragraphs**: Keep content concise
+- **Solution-oriented**: Always provide actionable next steps
+
+### 4. Tone Matching
+- **Conversational yet professional**: Direct and honest
+- **Educational approach**: Explain what went wrong and how to prevent it
+- **Collaborative tone**: Use "laten we samen", "ik hoor het graag"
+- **Proactive**: Offer solutions before being asked
+
+### 5. Common Patterns Observed
+- **Opening**: "Hoi [Name]," (most common Dutch)
+- **Problem identification**: Clear explanation of issues
+- **Achievement sharing**: Use bullet points
+- **Confirmation requests**: "Kun je controleren of het zo goed staat?"
+
+### 6. Email Templates (Based on Actual Usage)
+
+#### Dutch Personal Template
+```
+Hoi {name},
+
+{personal greeting and context}
+
+Wat we hebben bereikt:
+• {achievement 1}
+• {achievement 2}
+• {achievement 3}
+
+Ik hoor graag wat je ervan vind.
+
+Met vriendelijke groet,
+Danny Moons
+E: danny@moonsio.nl
+T: 0628509910
+```
+
+#### Dutch Business Template
+```
+Hoi {name},
+
+{problem identification and context}
+
+{clear solution or next steps}
+
+{timeline or expectations}
+
+Ik hoor het graag. Voor nu alvast een fijn weekend en ik spreek je ongetwijfeld na mijn korte vakantie.
+
+Met vriendelijke groet,
+Danny Moons
+E: danny@moonsio.nl
+T: 0628509910
+```
+
+### 7. Draft Quality Standards
+- **Ready to send**: Drafts should be complete and professional
+- **No editing needed**: User should be able to send immediately
+- **Proper formatting**: Line breaks, spacing, signature included
+- **Language corrections**: Fix all typos and grammar. Fluent Dutch is required when the email is in Dutch.
+
+### 8. Communication Guidelines
+1. **Language Selection**: Dutch for 80% of communications, English for international/technical
+2. **Tone Matching**: Conversational yet professional, direct and honest
+3. **Structure**: Bullet points for achievements, problem-solution format
+4. **Personalization**: Include personal context, acknowledge challenges
+5. **Signature**: Always include full contact details (email + phone)
+6. **Proactivity**: Offer solutions before being asked
+7. **Confirmation**: Ask for confirmation when appropriate
+8. **Timeline Management**: Set clear expectations about availability
+
+### 9. Email Formatting Rules
+**IMPORTANT**: When creating emails or drafts:
+
+1. **{signature} Placeholder**: When user mentions `{signature}`, always replace with:
+   ```
+   Met vriendelijke groet,
+   Danny Moons
+   E: danny@moonsio.nl
+   T: 0628509910
+   ```
+
+2. **Proper Email Structure**: Always create complete, professional emails with:
+   - Appropriate greeting (Hoi/Hi + name)
+   - Clear, well-formatted body content
+   - Complete signature with contact details
+   - Proper line breaks and spacing
+
+3. **Language Corrections**: Fix typos and ensure correct sentences
+
+4. **Draft Quality**: Ensure drafts are ready to send without additional editing
+
+### 10. Key Writing Characteristics
+1. **Efficiency**: Gets to the point quickly without unnecessary fluff
+2. **Empathy**: Acknowledges challenges and difficulties honestly
+3. **Proactivity**: Offers solutions and next steps before being asked
+4. **Personalization**: Adapts tone based on relationship (formal vs casual)
+5. **Professionalism**: Maintains business standards while being approachable
+6. **Educational**: Explains technical issues in understandable terms
+7. **Collaborative**: Uses inclusive language ("laten we samen", "ik hoor het graag")
+
+## ENFORCEMENT
+- ALWAYS follow these rules when creating or updating drafts
+- ALWAYS include complete signature with contact details
+- ALWAYS use proper Dutch/English greetings
+- ALWAYS fix typos and grammar errors
+- ALWAYS create drafts that are ready to send
+- ALWAYS maintain professional yet conversational tone
+- ALWAYS ask for the subject when we create a new email. DONT do this when we reply.
+- ALWAYS UPDATE existing drafts instead of creating new ones when user says "update draft with content"
+- NEVER create multiple drafts for the same email - use update_draft() not create_draft() for content changes

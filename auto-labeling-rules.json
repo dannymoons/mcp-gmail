@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-09-19T10:34:26.718Z",
+  "rules": [
+    {
+      "label_name": "WordPress updates",
+      "sender_pattern": null,
+      "subject_pattern": null,
+      "subject_contains": [
+        "Sommige plugins",
+        "Some plugins",
+        "Verslag met verlopen vertaalopdrachten",
+        "Duplicator Summary"
+      ],
+      "query": null,
+      "enabled": true,
+      "created": "2025-01-19T10:30:00.000Z",
+      "last_run": "2025-09-19T10:34:25.741Z",
+      "updated": "2025-09-19T09:31:21.976Z"
+    },
+    {
+      "label_name": "=> to trash",
+      "sender_pattern": null,
+      "subject_pattern": null,
+      "subject_contains": [
+        "Sommige plugins",
+        "Some plugins",
+        "Verslag met verlopen vertaalopdrachten",
+        "Delivery Status Notification",
+        "Weekly Activity for",
+        "Wachtwoord gewijzigd",
+        "Password changed"
+      ],
+      "query": null,
+      "enabled": true,
+      "created": "2025-01-19T10:30:00.000Z",
+      "last_run": "2025-09-19T10:34:26.225Z",
+      "updated": "2025-09-19T09:23:30.803Z"
+    },
+    {
+      "label_name": "=> for yuki",
+      "sender_pattern": null,
+      "subject_pattern": null,
+      "subject_contains": [
+        "receipt from",
+        "factuur kpn",
+        "invoice"
+      ],
+      "query": "(is:unread OR newer_than:7d) AND (subject:\\\"receipt from\\\" OR subject:\\\"factuur kpn\\\" OR subject:\\\"invoice\\\")",
+      "enabled": true,
+      "created": "2025-01-19T10:30:00.000Z",
+      "last_run": "2025-09-19T10:34:26.718Z",
+      "updated": "2025-09-19T10:33:46.847Z"
+    }
+  ]
+}
