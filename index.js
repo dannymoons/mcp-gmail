@@ -59,6 +59,22 @@ class GmailMcpServer {
       port: 53750,
     };
 
+    this.schedulerState = {
+      intervals: {
+        recentUnread: null,
+        autoLabeling: null,
+      },
+      config: {
+        recentUnreadInterval: 5 * 60 * 1000, // 5 minutes default
+        autoLabelingInterval: 12 * 60 * 60 * 1000, // 1 hour default
+        enabled: false,
+      },
+      lastRun: {
+        recentUnread: null,
+        autoLabeling: null,
+      },
+    };
+
     this.setupToolHandlers();
   }
 
@@ -852,6 +868,33 @@ class GmailMcpServer {
             required: ['file_path'],
           },
         },
+        {
+          name: 'start_scheduler',
+          description: 'Start the automated scheduler for list_recent_unread and run_auto_labeling_rules.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              recent_unread_interval: { type: 'number', description: 'Interval in milliseconds for list_recent_unread (default: 300000 = 5 minutes)' },
+              auto_labeling_interval: { type: 'number', description: 'Interval in milliseconds for run_auto_labeling_rules (default: 900000 = 15 minutes)' },
+            },
+          },
+        },
+        {
+          name: 'stop_scheduler',
+          description: 'Stop the automated scheduler.',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        {
+          name: 'get_scheduler_status',
+          description: 'Get the current status of the scheduler including configuration and last run times.',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
+        },
       ],
     }));
 
@@ -961,6 +1004,12 @@ class GmailMcpServer {
             return await this.toolExportAutoLabelingRules(args);
           case 'import_auto_labeling_rules':
             return await this.toolImportAutoLabelingRules(args);
+          case 'start_scheduler':
+            return await this.toolStartScheduler(args);
+          case 'stop_scheduler':
+            return await this.toolStopScheduler(args);
+          case 'get_scheduler_status':
+            return await this.toolGetSchedulerStatus(args);
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Tool ${name} not found`);
         }
@@ -969,6 +1018,52 @@ class GmailMcpServer {
         throw new McpError(ErrorCode.InternalError, error.message || 'Unknown error');
       }
     });
+  }
+
+  // Scheduler methods
+  startScheduler() {
+    if (!this.schedulerState.config.enabled) {
+      return;
+    }
+
+    // Clear existing intervals
+    this.stopScheduler();
+
+    // Start recent unread scheduler
+    this.schedulerState.intervals.recentUnread = setInterval(async () => {
+      try {
+        console.error(`[Scheduler] Running list_recent_unread at ${new Date().toISOString()}`);
+        await this.toolListRecentUnread({ days: '7', max: 50 });
+        this.schedulerState.lastRun.recentUnread = new Date();
+      } catch (error) {
+        console.error(`[Scheduler] Error in list_recent_unread:`, error.message);
+      }
+    }, this.schedulerState.config.recentUnreadInterval);
+
+    // Start auto-labeling scheduler
+    this.schedulerState.intervals.autoLabeling = setInterval(async () => {
+      try {
+        console.error(`[Scheduler] Running run_auto_labeling_rules at ${new Date().toISOString()}`);
+        await this.toolRunAutoLabelingRules({ dry_run: false, max_per_rule: 100 });
+        this.schedulerState.lastRun.autoLabeling = new Date();
+      } catch (error) {
+        console.error(`[Scheduler] Error in run_auto_labeling_rules:`, error.message);
+      }
+    }, this.schedulerState.config.autoLabelingInterval);
+
+    console.error(`[Scheduler] Started with intervals: recent_unread=${this.schedulerState.config.recentUnreadInterval}ms, auto_labeling=${this.schedulerState.config.autoLabelingInterval}ms`);
+  }
+
+  stopScheduler() {
+    if (this.schedulerState.intervals.recentUnread) {
+      clearInterval(this.schedulerState.intervals.recentUnread);
+      this.schedulerState.intervals.recentUnread = null;
+    }
+    if (this.schedulerState.intervals.autoLabeling) {
+      clearInterval(this.schedulerState.intervals.autoLabeling);
+      this.schedulerState.intervals.autoLabeling = null;
+    }
+    console.error('[Scheduler] Stopped');
   }
 
   async toolStartOAuth(args) {
@@ -4059,6 +4154,86 @@ class GmailMcpServer {
       if (error instanceof McpError) throw error;
       throw new McpError(ErrorCode.InternalError, `Failed to import rules: ${error.message}`);
     }
+  }
+
+  async toolStartScheduler(args) {
+    const { recent_unread_interval, auto_labeling_interval } = args || {};
+    
+    // Update configuration if provided
+    if (recent_unread_interval && recent_unread_interval > 0) {
+      this.schedulerState.config.recentUnreadInterval = recent_unread_interval;
+    }
+    if (auto_labeling_interval && auto_labeling_interval > 0) {
+      this.schedulerState.config.autoLabelingInterval = auto_labeling_interval;
+    }
+    
+    // Enable scheduler
+    this.schedulerState.config.enabled = true;
+    
+    // Start the scheduler
+    this.startScheduler();
+    
+    return {
+      content: this.formatContent({
+        message: 'Scheduler started successfully!',
+        config: {
+          recent_unread_interval: this.schedulerState.config.recentUnreadInterval,
+          auto_labeling_interval: this.schedulerState.config.autoLabelingInterval,
+          enabled: this.schedulerState.config.enabled,
+        },
+        intervals_in_minutes: {
+          recent_unread: Math.round(this.schedulerState.config.recentUnreadInterval / 60000),
+          auto_labeling: Math.round(this.schedulerState.config.autoLabelingInterval / 60000),
+        }
+      }),
+      isText: true
+    };
+  }
+
+  async toolStopScheduler(args) {
+    this.schedulerState.config.enabled = false;
+    this.stopScheduler();
+    
+    return {
+      content: this.formatContent({
+        message: 'Scheduler stopped successfully!',
+        config: {
+          enabled: this.schedulerState.config.enabled,
+        }
+      }),
+      isText: true
+    };
+  }
+
+  async toolGetSchedulerStatus(args) {
+    const isRunning = this.schedulerState.intervals.recentUnread !== null || 
+                     this.schedulerState.intervals.autoLabeling !== null;
+    
+    return {
+      content: this.formatContent({
+        scheduler_status: {
+          enabled: this.schedulerState.config.enabled,
+          running: isRunning,
+          config: {
+            recent_unread_interval: this.schedulerState.config.recentUnreadInterval,
+            auto_labeling_interval: this.schedulerState.config.autoLabelingInterval,
+          },
+          intervals_in_minutes: {
+            recent_unread: Math.round(this.schedulerState.config.recentUnreadInterval / 60000),
+            auto_labeling: Math.round(this.schedulerState.config.autoLabelingInterval / 60000),
+          },
+          last_run: {
+            recent_unread: this.schedulerState.lastRun.recentUnread?.toISOString() || 'Never',
+            auto_labeling: this.schedulerState.lastRun.autoLabeling?.toISOString() || 'Never',
+          },
+          active_intervals: {
+            recent_unread: this.schedulerState.intervals.recentUnread !== null,
+            auto_labeling: this.schedulerState.intervals.autoLabeling !== null,
+          }
+        }
+      }),
+      isText: true
+    };
   }
 
   async run() {
