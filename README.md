@@ -113,6 +113,47 @@ This new method provides a clean table format for viewing recent unread emails:
 - `export_auto_labeling_rules({ file_path? })` - Export rules to JSON file
 - `import_auto_labeling_rules({ file_path, merge? })` - Import rules from JSON file
 
+### Automated Scheduler
+- `start_scheduler({ recent_unread_interval?, auto_labeling_interval? })` - Start automated scheduler
+- `stop_scheduler()` - Stop the automated scheduler
+- `get_scheduler_status()` - Get current scheduler status and configuration
+
+#### Scheduler Features
+The scheduler automatically runs two key functions at configurable intervals while the server is running:
+
+1. **Recent Unread Check**: Runs `list_recent_unread` to monitor new emails
+2. **Auto-Labeling**: Runs `run_auto_labeling_rules` to apply labeling rules
+
+**Default Intervals:**
+- Recent Unread: 5 minutes (300,000ms)
+- Auto-Labeling: 15 minutes (900,000ms)
+
+**Usage Examples:**
+```javascript
+// Start with default intervals
+start_scheduler()
+
+// Start with custom intervals (1 minute and 5 minutes)
+start_scheduler({
+  recent_unread_interval: 60000,   // 1 minute
+  auto_labeling_interval: 300000   // 5 minutes
+})
+
+// Check status
+get_scheduler_status()
+
+// Stop scheduler
+stop_scheduler()
+```
+
+**Scheduler Benefits:**
+- **Continuous Monitoring**: Automatically checks for new emails
+- **Automatic Organization**: Applies labeling rules without manual intervention
+- **Server-Only**: Only runs while the MCP server is active
+- **Configurable**: Adjust intervals based on your needs
+- **Error Handling**: Continues running even if individual operations fail
+- **Logging**: All scheduler activity is logged to stderr for monitoring
+
 ## Usage
 
 ### Basic Workflow
