@@ -1,21 +1,18 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-19T10:34:26.718Z",
+  "lastUpdated": "2025-09-21T18:34:47.086Z",
   "rules": [
     {
       "label_name": "WordPress updates",
       "sender_pattern": null,
       "subject_pattern": null,
       "subject_contains": [
-        "Sommige plugins",
-        "Some plugins",
-        "Verslag met verlopen vertaalopdrachten",
-        "Duplicator Summary"
+        "Automate report for"
       ],
       "query": null,
       "enabled": true,
       "created": "2025-01-19T10:30:00.000Z",
-      "last_run": "2025-09-19T10:34:25.741Z",
+      "last_run": "2025-09-21T18:34:45.856Z",
       "updated": "2025-09-19T09:31:21.976Z"
     },
     {
@@ -29,13 +26,32 @@
         "Delivery Status Notification",
         "Weekly Activity for",
         "Wachtwoord gewijzigd",
-        "Password changed"
+        "Password changed",
+        "resail.org"
       ],
       "query": null,
       "enabled": true,
       "created": "2025-01-19T10:30:00.000Z",
-      "last_run": "2025-09-19T10:34:26.225Z",
+      "last_run": "2025-09-21T18:34:46.237Z",
       "updated": "2025-09-19T09:23:30.803Z"
+    },
+    {
+      "label_name": "=> to trash",
+      "sender_pattern": "Paid Memberships Pro",
+      "subject_pattern": null,
+      "query": null,
+      "enabled": true,
+      "created": "2025-01-19T10:30:00.000Z",
+      "last_run": "2025-09-20T15:36:12.336Z",
+      "updated": "2025-09-19T09:23:30.803Z"
+    },
+    {
+      "label_name": "=> github",
+      "sender_pattern": "notifications@github.com",
+      "subject_pattern": null,
+      "query": "from:notifications@github.com",
+      "enabled": true,
+      "last_run": "2025-09-21T18:34:46.691Z"
     },
     {
       "label_name": "=> for yuki",
@@ -49,7 +65,7 @@
       "query": "(is:unread OR newer_than:7d) AND (subject:\\\"receipt from\\\" OR subject:\\\"factuur kpn\\\" OR subject:\\\"invoice\\\")",
       "enabled": true,
       "created": "2025-01-19T10:30:00.000Z",
-      "last_run": "2025-09-19T10:34:26.718Z",
+      "last_run": "2025-09-21T18:34:47.086Z",
       "updated": "2025-09-19T10:33:46.847Z"
     }
   ]
